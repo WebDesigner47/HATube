@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HA Tube - Download YouTube Videos in HD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #ff0000;
+            --secondary-color: #282828;
+            --accent-color: #3d3d3d;
+            --light-color: #f8f9fa;
+            --dark-color: #212121;
+            --success-color: #28a745;
+        }
+
+        body {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--secondary-color);
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 50px;
+            background: linear-gradient(rgba(33, 33, 33, 0.9), rgba(33, 33, 33, 0.9)), 
+                        url('https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #ddd;
+        }
+
+        /* Download Section */
+        .download-section {
+            padding: 60px 0;
+            background-color: var(--secondary-color);
+        }
+
+        .download-card {
+            background-color: var(--accent-color);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 30px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 18px 20px;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            font-size: 1.1rem;
+            background-color: #4a4a4a;
+            color: white;
+        }
+
+        .input-group input::placeholder {
+            color: #aaa;
+        }
+
+        .input-group button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .input-group button:hover {
+            background-color: #cc0000;
+        }
+
+        .quality-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quality-options h3 {
+            width: 100%;
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+
+        .quality-btn {
+            padding: 12px 25px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .quality-btn:hover {
+            background-color: #666;
+        }
+
+        .quality-btn.active {
+            background-color: var(--primary-color);
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background-color: #218838;
+        }
+
+        .download-btn i {
+            margin-right: 10px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--secondary-color);
+            padding: 35px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #bbb;
+        }
+
+        /* Instructions Section */
+        .instructions {
+            padding: 80px 0;
+            background-color: var(--secondary-color);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo span {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            color: #888;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            width: 100%;
+        }
+
+        /* Result Container */
+        .result-container {
+            display: none;
+            margin-top: 30px;
+            background-color: #4a4a4a;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .video-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .thumbnail {
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .video-details h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .video-details p {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input {
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .input-group button {
+                border-radius: 8px;
+                padding: 15px;
+            }
+            
+            .video-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-youtube"></i>
+                    <h1>HA <span>Tube</span></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#download">Download</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#instructions">How to Use</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Download YouTube Videos in HD Quality</h2>
+            <p>HA Tube allows you to download any YouTube video quickly and easily. Just paste the link, select quality, and download - it's that simple!</p>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download-section" id="download">
+        <div class="container">
+            <div class="download-card">
+                <h2 style="text-align: center; margin-bottom: 30px; color: white;">Download YouTube Video</h2>
+                <div class="input-group">
+                    <input type="text" id="videoUrl" placeholder="Paste YouTube video link here...">
+                    <button id="pasteBtn"><i class="fas fa-paste"></i> Paste</button>
+                </div>
+                
+                <div class="quality-options">
+                    <h3>Select Video Quality:</h3>
+                    <button class="quality-btn active" data-quality="1080">1080p (HD)</button>
+                    <button class="quality-btn" data-quality="720">720p (HD)</button>
+                    <button class="quality-btn" data-quality="480">480p</button>
+                    <button class="quality-btn" data-quality="360">360p</button>
+                    <button class="quality-btn" data-quality="mp3">MP3 Audio</button>
+                </div>
+                
+                <button class="download-btn" id="downloadBtn">
+                    <i class="fas fa-download"></i> Download Video
+                </button>
+                
+                <!-- Result Container -->
+                <div class="result-container" id="resultContainer">
+                    <div class="video-info">
+                        <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Video Thumbnail" class="thumbnail" id="videoThumbnail">
+                        <div class="video-details">
+                            <h3 id="videoTitle">How to Build a YouTube Video Downloader Website</h3>
+                            <p id="videoDuration">Duration: 12:45</p>
+                            <p id="videoChannel">Channel: HA Tube Tutorials</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 15px;">Your video is ready to download in <span id="selectedQuality" style="color: #ffcc00; font-weight: bold;">1080p HD</span> quality.</p>
+                    <button class="download-btn" id="finalDownloadBtn">
+                        <i class="fas fa-download"></i> Download Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose HA Tube?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-hdd"></i>
+                    <h3>HD Quality</h3>
+                    <p>Download videos in high definition up to 1080p quality for the best viewing experience.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Fast Download</h3>
+                    <p>Our optimized servers ensure the fastest download speeds for your videos.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Safe & Secure</h3>
+                    <p>We don't store any of your data or downloaded videos. Your privacy is our priority.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Friendly</h3>
+                    <p>Works perfectly on all devices - smartphones, tablets, and desktop computers.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-infinity"></i>
+                    <h3>Unlimited Downloads</h3>
+                    <p>No restrictions on the number of videos you can download. Completely free!</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headphones"></i>
+                    <h3>MP3 Support</h3>
+                    <p>Extract audio from YouTube videos and download them as MP3 files.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructions Section -->
+    <section class="instructions" id="instructions">
+        <div class="container">
+            <h2 class="section-title">How to Download YouTube Videos</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Copy Video Link</h3>
+                    <p>Go to YouTube and copy the URL of the video you want to download.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Paste Link</h3>
+                    <p>Paste the copied link into the input field on HA Tube website.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Select Quality</h3>
+                    <p>Choose your preferred video quality (from 360p to 1080p HD).</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Download</h3>
+                    <p>Click the download button and save your video to your device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">HA <span>Tube</span></div>
+                <p>The fastest and most reliable YouTube video downloader</p>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 HA Tube. All rights reserved. This tool is for personal use only.</p>
+                <p style="margin-top: 10px; font-size: 0.8rem;">Disclaimer: HA Tube is not affiliated with YouTube. Please respect copyright laws and only download videos you have permission to use.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const videoUrlInput = document.getElementById('videoUrl');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const qualityBtns = document.querySelectorAll('.quality-btn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const finalDownloadBtn = document.getElementById('finalDownloadBtn');
+        const selectedQualitySpan = document.getElementById('selectedQuality');
+        const videoTitle = document.getElementById('videoTitle');
+        const videoDuration = document.getElementById('videoDuration');
+        const videoChannel = document.getElementById('videoChannel');
+        const videoThumbnail = document.getElementById('videoThumbnail');
+        
+        // Current selected quality
+        let selectedQuality = '1080';
+        
+        // Quality buttons event listeners
+        qualityBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                qualityBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedQuality = this.getAttribute('data-quality');
+                
+                // Update the displayed quality in the result container
+                if (selectedQuality === 'mp3') {
+                    selectedQualitySpan.textContent = 'MP3 Audio';
+                } else {
+                    selectedQualitySpan.textContent = `${selectedQuality}p HD`;
+                }
+            });
+        });
+        
+        // Paste button functionality
+        pasteBtn.addEventListener('click', async function() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text.includes('youtube.com') || text.includes('youtu.be')) {
+                    videoUrlInput.value = text;
+                    showNotification('Link pasted successfully!', 'success');
+                } else {
+                    showNotification('Please paste a valid YouTube URL', 'error');
+                }
+            } catch (err) {
+                console.error('Failed to read clipboard contents: ', err);
+                showNotification('Unable to access clipboard. Please paste manually.', 'error');
+            }
+        });
+        
+        // Download button functionality
+        downloadBtn.addEventListener('click', function() {
+            const videoUrl = videoUrlInput.value.trim();
+            
+            // Validate YouTube URL
+            if (!videoUrl) {
+                showNotification('Please enter a YouTube video URL', 'error');
+                return;
+            }
+            
+            if (!isValidYouTubeUrl(videoUrl)) {
+                showNotification('Please enter a valid YouTube video URL', 'error');
+                return;
+            }
+            
+            // Simulate fetching video info (in a real app, this would be an API call)
+            simulateFetchVideoInfo(videoUrl);
+            
+            // Show result container
+            resultContainer.style.display = 'block';
+            
+            // Scroll to result container
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            showNotification('Video information loaded successfully!', 'success');
+        });
+        
+        // Final download button
+        finalDownloadBtn.addEventListener('click', function() {
+            const videoUrl = videoUrlInput.value.trim();
+            
+            if (!videoUrl || !isValidYouTubeUrl(videoUrl)) {
+                showNotification('Invalid video URL', 'error');
+                return;
+            }
+            
+            // In a real application, this would trigger the actual download
+            // For demo purposes, we'll show a notification
+            if (selectedQuality === 'mp3') {
+                showNotification(`Starting MP3 audio download for the video...`, 'success');
+            } else {
+                showNotification(`Starting download in ${selectedQuality}p quality...`, 'success');
+            }
+            
+            // Simulate download process
+            simulateDownload();
+        });
+        
+        // Function to validate YouTube URL
+        function isValidYouTubeUrl(url) {
+            const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+            return pattern.test(url);
+        }
+        
+        // Function to simulate fetching video info
+        function simulateFetchVideoInfo(url) {
+            // In a real app, you would extract video ID and fetch from an API
+            // For demo, we'll use mock data
+            
+            // Extract video ID from URL (simplified for demo)
+            let videoId = 'dQw4w9WgXcQ'; // Default video ID
+            
+            if (url.includes('v=')) {
+                videoId = url.split('v=')[1].substring(0, 11);
+            } else if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].substring(0, 11);
+            }
+            
+            // Update video thumbnail with the video ID
+            videoThumbnail.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            
+            // Mock video details (in real app, these would come from an API)
+            const mockTitles = [
+                "How to Build a YouTube Video Downloader Website",
+                "Learn JavaScript in 60 Minutes",
+                "The Future of Artificial Intelligence",
+                "Amazing Nature Documentary 2023",
+                "Top 10 Programming Languages to Learn"
+            ];
+            
+            const mockChannels = [
+                "HA Tube Tutorials",
+                "CodeWithMe",
+                "Tech Explorers",
+                "Nature World",
+                "Programming Hub"
+            ];
+            
+            const mockDurations = ["12:45", "18:30", "25:15", "42:20", "08:55"];
+            
+            const randomIndex = Math.floor(Math.random() * mockTitles.length);
+            
+            videoTitle.textContent = mockTitles[randomIndex];
+            videoChannel.textContent = `Channel: ${mockChannels[randomIndex]}`;
+            videoDuration.textContent = `Duration: ${mockDurations[randomIndex]}`;
+        }
+        
+        // Function to simulate download process
+        function simulateDownload() {
+            // Show downloading animation
+            const originalText = finalDownloadBtn.innerHTML;
+            finalDownloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+            finalDownloadBtn.disabled = true;
+            
+            // Simulate download delay
+            setTimeout(() => {
+                finalDownloadBtn.innerHTML = originalText;
+                finalDownloadBtn.disabled = false;
+                
+                // Show success message
+                if (selectedQuality === 'mp3') {
+                    showNotification('MP3 audio downloaded successfully!', 'success');
+                } else {
+                    showNotification(`Video downloaded successfully in ${selectedQuality}p!`, 'success');
+                }
+            }, 2500);
+        }
+        
+        // Function to show notifications
+        function showNotification(message, type) {
+            // Remove any existing notification
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            `;
+            
+            if (type === 'success') {
+                notification.style.backgroundColor = '#28a745';
+            } else {
+                notification.style.backgroundColor = '#dc3545';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Add CSS for notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Demo: Auto-fill a sample URL for testing
+        window.addEventListener('DOMContentLoaded', function() {
+            // Uncomment the line below to auto-fill a sample URL for testing
+            // videoUrlInput.value = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        });
+    </script>
+</body>
+</html>
